@@ -2,7 +2,10 @@ import React from 'react'
 import { useMutation, useQuery } from 'react-apollo';
 import { gql } from 'apollo-boost'
 import { Listings as ListingsData } from './__generated__/Listings'
-import { DeleteListing as DeleteListingData, DeleteListingVariables } from './__generated__/DeleteListing';
+import { DeleteListing as DeleteListingData, DeleteListingVariables } from './__generated__/DeleteListing'
+import { List, Avatar, Button, Spin } from 'antd'
+import './styles/Listings.css'
+
 
 const LISTINGS = gql`
   query Listings {
@@ -44,17 +47,35 @@ export const Listings = ({ title }: Props) => {
 
   const listings = data ? data.listings : null
 
-  const listingsList = (
-    <ul>
-      {
-        listings?.map(listing => (
-          <li key={listing.id}>
-            {listing.title}
-            <button onClick={() => handleDeleteListing(listing.id)}>Delete</button>
-          </li>
-        ))
-      }
-    </ul>
+  const listingsList = listings && (
+    <List
+      itemLayout='horizontal'
+      dataSource={listings}
+      renderItem={listing => (
+        <List.Item
+          actions={[
+            <Button
+              onClick={() => handleDeleteListing(listing.id)}
+              type="primary"
+            >
+              Delete
+            </Button>
+          ]}
+        >
+          <List.Item.Meta
+            title={listing.title}
+            description={listing.address}
+            avatar={
+              <Avatar
+                src={listing.image}
+                shape="square"
+                size={48}
+              />
+            }
+          />
+        </List.Item>
+      )}
+    />
   )
 
   if (error) {
@@ -65,15 +86,15 @@ export const Listings = ({ title }: Props) => {
     return <h2>Loading ...</h2>
   }
 
-  const deleteListeningLoading = deleteLoading && <h4>Deletion in progress</h4>
   const deleteListeningError = deleteError && <h4>Delete error</h4>
 
   return (
-    <div>
-      <h2>{title}</h2>
-      {listingsList}
-      {deleteListeningLoading}
-      {deleteListeningError}
+    <div className="listings">
+      <Spin spinning={deleteLoading}>
+        <h2>{title}</h2>
+        {listingsList}
+        {deleteListeningError}
+      </Spin>
     </div>
   )
 }

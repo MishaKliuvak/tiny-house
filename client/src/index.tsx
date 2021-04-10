@@ -3,6 +3,7 @@ import { render } from 'react-dom'
 import { Listings } from './sections'
 import ApolloClient from 'apollo-boost'
 import { ApolloProvider } from 'react-apollo'
+import './styles/index.css'
 
 const client = new ApolloClient({
   uri: '/api'
