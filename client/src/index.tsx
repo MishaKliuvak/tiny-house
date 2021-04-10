@@ -1,10 +1,16 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import { Listings } from './sections';
+import React from 'react'
+import { render } from 'react-dom'
+import { Listings } from './sections'
+import ApolloClient from 'apollo-boost'
+import { ApolloProvider } from 'react-apollo'
 
-ReactDOM.render(
-  <React.StrictMode>
+const client = new ApolloClient({
+  uri: '/api'
+})
+
+render(
+  <ApolloProvider client={client}>
     <Listings title='Tiny House'/>
-  </React.StrictMode>,
+  </ApolloProvider>,
   document.getElementById('root')
 );
