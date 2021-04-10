@@ -70,8 +70,8 @@ export const Listings = ({ title }: Props) => {
     <div>
       <h2>{title}</h2>
       {listingsList}
-      {deleteLoading}
-      {deleteError}
+      {deleteListeningLoading}
+      {deleteListeningError}
     </div>
   )
 }
