@@ -3,8 +3,9 @@ import { useMutation, useQuery } from 'react-apollo';
 import { gql } from 'apollo-boost'
 import { Listings as ListingsData } from './__generated__/Listings'
 import { DeleteListing as DeleteListingData, DeleteListingVariables } from './__generated__/DeleteListing'
-import { List, Avatar, Button, Spin } from 'antd'
+import { List, Avatar, Button, Spin, Alert } from 'antd';
 import './styles/Listings.css'
+import { ListingsSkeleton } from './components';
 
 
 const LISTINGS = gql`
@@ -79,21 +80,36 @@ export const Listings = ({ title }: Props) => {
   )
 
   if (error) {
-    return <h2>Something were wrong</h2>
+    return (
+      <div className="listings">
+        <ListingsSkeleton title={title} error />
+      </div>
+    )
   }
 
   if (loading) {
-    return <h2>Loading ...</h2>
+    return (
+      <div className="listings">
+        <ListingsSkeleton title={title} />
+      </div>
+    )
   }
 
-  const deleteListeningError = deleteError && <h4>Delete error</h4>
+  const deleteListeningError = deleteError && (
+    <Alert
+      type="error"
+      message="Uh oh! Something went wrong"
+      className="listings__alert"
+    />
+  )
 
   return (
     <div className="listings">
       <Spin spinning={deleteLoading}>
+        {deleteListeningError}
+
         <h2>{title}</h2>
         {listingsList}
-        {deleteListeningError}
       </Spin>
     </div>
   )
